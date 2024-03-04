@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <form id="user">
+        <input type="text" id="username" name="username" placeholder="Username">
+        <input type="text" id="firstName" name="firstName" placeholder="First Name">
+        <input type="text" id="lastName" name="lastName" placeholder="Last Name">
+        <input type="password" id="password" name="password" placeholder="Password">
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+        <button id="send" type="submit">Submit</button>
+    </form> -->
+
+    <form id="user">
+        <input type="file" name="avatar" id="fileInput">
+        <button>Submit</button>
+    </form>
+
+
+    <script>
+
+        document.getElementById("user").addEventListener("submit", function (event) {
+            event.preventDefault()
+            let fileInput = document.getElementById("fileInput")
+            const formdata = new FormData();
+            formdata.append("imageAvatar", fileInput.files[0]);
+
+            const requestOptions = {
+                method: "POST",
+                body: formdata,
+                redirect: "follow"
+            };
+
+            fetch("http://localhost:3000/create-avatar", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.error(error));
+        });
+
+
+
+    </script>
+</body>
+
+</html>
