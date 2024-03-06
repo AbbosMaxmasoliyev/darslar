@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const groupRouter = require("./api/groupApi")
 const userRouter = require("./api/userApi")
+const examineRouter = require("./api/examineApi")
 
 
 // const uri = "mongodb+srv://abbos007:ddcj4rlKdJgZWWTS@cluster1.rwfz6mv.mongodb.net/?retryWrites=true&w=majority";
@@ -143,6 +144,7 @@ app.use("/user", userRouter)
 
 
 app.use("/group", groupRouter)
+app.use("/examine", examineRouter)
 
 
 
