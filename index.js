@@ -4,12 +4,16 @@ const cors = require("cors")
 const fs = require("fs")
 const { authMiddleware } = require("./uploads/middleware/authentication")
 const User = require("./Models/user")
+const Group = require("./Models/group")
 const multer = require('multer')
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const groupRouter = require("./api/groupApi")
 const userRouter = require("./api/userApi")
 const examineRouter = require("./api/examineApi")
+const attendance = require("./custom")
+const moment = require("moment")
+const attendaceRouter = require("./api/attendanceApi")
 
 
 // const uri = "mongodb+srv://abbos007:ddcj4rlKdJgZWWTS@cluster1.rwfz6mv.mongodb.net/?retryWrites=true&w=majority";
@@ -145,6 +149,23 @@ app.use("/user", userRouter)
 
 app.use("/group", groupRouter)
 app.use("/examine", examineRouter)
+app.use("/attendance", attendaceRouter)
+app.post("/group/calendar-add/:id", async (req, res) => {
+    console.log(req.body);
+    let id = req.params.id
+    let { startDate } = req.body
+
+    let group = await Group.findById(id)
+    let { weekDay, summa } = group
+
+    let calendar = await attendance(startDate, weekDay, 50000)
+    console.log(calendar.dates)
+    group.attendance = await calendar.dates
+
+    group.save().then(response => {
+        res.send(response)
+    })
+})
 
 
 

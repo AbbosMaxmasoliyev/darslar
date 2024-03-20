@@ -56,6 +56,10 @@ const GroupSchema = new mongoose.Schema({
 
         type: Schema.Types.ObjectId,
         ref: 'User'
+    },
+    attendance: {
+        type:[Date],
+        
     }
 })
 
