@@ -9,7 +9,7 @@ const { zeroAdd, attendance } = require("../custom")
 
 attendaceRouter.get("/all", async (req, res) => {
 
-    let attendance = await Attendance.find()
+    let attendance = await Attendance.find().populate("_groupId").populate("_teacher").populate("_studentId")
     if (!attendance) {
         res.status(404).send("not found")
     }

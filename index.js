@@ -82,34 +82,40 @@ function verifyToken(req, res, next) {
 
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
-            return res.status(401).json({ message: 'Invalid token' });
+            return res.status(401).json({ message: 'Invalid User' });
         }
         req.user = decoded;
         next();
     });
 }
 
-app.post("/token", async (req, res) => {
+app.get("/auth", verifyToken, async (req, res) => {
 
-    let { username, password } = req.body
-
+    let { username, password } = req.user
+    console.log(req.user);
     res.send(jwt.sign({ username: username, password: password }, secretKey))
 })
 
 
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+app.get('/login', async (req, res) => {
+    const { username, password } = req.headers;
     // Find user in the mock database
-    const user = await User.findOne({ username });
+    try {
+        const user = await User.findOne({ username });
 
-    console.log(user);
-    if (user._id) {
 
-        const token = jwt.sign({ username: user.username, date: user.date }, secretKey);
-        res.json({ token });
-    } else {
-        res.status(401).json({ message: 'Invalid username or password' });
+        if (user) {
+
+            const token = jwt.sign({ username: user.username, date: user.date, password: user.password }, secretKey);
+            res.json({ token });
+        } else {
+            res.status(401).json({ message: 'Invalid username or password' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+
     }
+
 });
 
 app.post('/signup', async (req, res) => {
@@ -130,6 +136,11 @@ app.post('/signup', async (req, res) => {
 
     }
 });
+
+
+
+
+
 app.get('/protected', verifyToken, async (req, res) => {
     let username = req.user.username
 
@@ -147,7 +158,7 @@ app.get('/protected', verifyToken, async (req, res) => {
 app.use("/user", userRouter)
 
 
-app.use("/group", groupRouter)
+app.use("/group", verifyToken, groupRouter)
 app.use("/examine", examineRouter)
 app.use("/attendance", attendaceRouter)
 app.post("/group/calendar-add/:id", async (req, res) => {

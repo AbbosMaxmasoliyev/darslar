@@ -35,10 +35,7 @@ const AttendanceSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    _groupId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Group'
-    }
+    
 })
 
 
