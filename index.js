@@ -68,7 +68,7 @@ app.post("/create-avatar", upload.single("imageAvatar"), function (req, res, nex
 })
 
 
-const PORT = 3000
+const PORT = 4001
 
 let secretKey = "1p08a92tk0"
 app.use(cors())
@@ -79,12 +79,14 @@ function verifyToken(req, res, next) {
     if (!token) {
         return res.status(403).json({ message: 'Token is required' });
     }
+    console.log(token);
 
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
             return res.status(401).json({ message: 'Invalid User' });
         }
         req.user = decoded;
+        console.log(decoded);
         next();
     });
 }
@@ -160,7 +162,7 @@ app.use("/user", userRouter)
 
 app.use("/group", verifyToken, groupRouter)
 app.use("/examine", examineRouter)
-app.use("/attendance", attendaceRouter)
+app.use("/attendance",verifyToken, attendaceRouter)
 app.post("/group/calendar-add/:id", async (req, res) => {
     console.log(req.body);
     let id = req.params.id

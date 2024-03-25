@@ -1,3 +1,4 @@
+const User = require("./Models/user");
 
 
 let days = {
@@ -89,6 +90,17 @@ const zeroAdd = (date) => {
 
 
 }
+async function checkId(user) {
+    
+    let { username } = user
+    let userCheck = await User.findOne({ username })
 
+    if (!userCheck._id && !userCheck.role) {
+        return { id: null, role: null }
+    }
+   
 
-module.exports = { attendance, zeroAdd }
+    return { id: userCheck._id, role: userCheck.role }
+}
+
+module.exports = { attendance, zeroAdd, checkId }

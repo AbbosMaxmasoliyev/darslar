@@ -1,15 +1,10 @@
 const express = require("express")
 const Group = require("../Models/group")
 const User = require("../Models/user")
+const { checkId } = require("../custom")
 const groupRouter = express.Router()
 
-async function checkId(user) {
-    let { username } = req.user
-    let userCheck = await User.findOne({ username })
-    console.log(userCheck);
 
-    return { id: _id, role: role }
-}
 
 groupRouter.get("/all", async (req, res) => {
     let { id, role } = await checkId(req.user)
